@@ -9,6 +9,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.security.auth.message.AuthException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URI;
@@ -36,7 +37,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                 return true;
             }
 
-            return false;
+            throw new AuthException();
         }
 
         return true;
@@ -46,16 +47,18 @@ public class AuthInterceptor implements HandlerInterceptor {
 
         //response javascrit, html,
         if (handler instanceof ResourceHttpRequestHandler) {
+            System.out.println(1);
             return true;
         }
-
+        System.out.println(3);
         //annotation check
         HandlerMethod handlerMethod = (HandlerMethod) handler;
 
         if (null != handlerMethod.getMethodAnnotation(clazz) || null != handlerMethod.getBeanType().getAnnotation(clazz)) {
+            System.out.println(2);
             return true;
         }
-
+        System.out.println(4);
         return true;
     }
 }
